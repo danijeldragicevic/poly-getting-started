@@ -1,0 +1,10 @@
+node_modules/
+*.tsbuildinfo
+*.log
+
+# dotenv environment variable files
+.env
+.env.local
+
+# editor
+.vscode/

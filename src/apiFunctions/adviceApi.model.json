@@ -1,0 +1,55 @@
+{
+  "functions": [
+    {
+      "name": "getRandomAdvice",
+      "context": "covetrus.demo",
+      "description": "Retrieve a random advice slip from Advice Slip API. Sends GET request to /advice with no request body and returns an advice payload (slip). Useful for fetching a random quote, tip, or guidance text.",
+      "arguments": [],
+      "returnType": "object",
+      "returnTypeSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "required": [
+          "slip"
+        ],
+        "properties": {
+          "slip": {
+            "type": "object",
+            "required": [
+              "id",
+              "advice"
+            ],
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "advice": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "otherReturnTypes": [],
+      "source": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "body": {
+          "mode": "empty"
+        },
+        "url": "https://api.adviceslip.com/advice",
+        "headers": []
+      }
+    }
+  ],
+  "webhooks": [
+    
+  ],
+  "schemas": [
+    
+  ]
+}
