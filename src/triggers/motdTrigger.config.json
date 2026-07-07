@@ -1,11 +1,11 @@
 {
     "name": "motdTrigger",
     "source": {
-        "webhookContext": "covetrus.demo",
+        "webhookContext": "covetrus2.demo2",
         "webhookName": "motdWebhook"
     },
     "destination": {
-        "serverFunctionContext": "covetrus.demo",
+        "serverFunctionContext": "covetrus2.demo2",
         "serverFunctionName": "motdServer"
     },
     "waitForResponse": true,

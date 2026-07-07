@@ -1,23 +1,23 @@
 {
-  "name": "poly-getting-started",
-  "description": "Getting-started tutorial and starter project for building on PolyAPI at Covetrus.",
-  "version": "1.0.0",
-  "license": "UNLICENSED",
-  "private": true,
-  "scripts": {
-    "generate": "poly generate",
-    "deploy": "poly sync",
-    "setup:trigger": "ts-node src/triggers/motdTrigger.ts",
-    "models:generate": "poly model generate src/apiFunctions/jokeApi.openapi.yaml src/apiFunctions/jokeApi.model.json --context covetrus.demo && poly model generate src/apiFunctions/adviceApi.openapi.yaml src/apiFunctions/adviceApi.model.json --context covetrus.demo",
-    "models:validate": "poly model validate src/apiFunctions/jokeApi.model.json && poly model validate src/apiFunctions/adviceApi.model.json",
-    "models:train": "poly model train src/apiFunctions/jokeApi.model.json && poly model train src/apiFunctions/adviceApi.model.json"
-  },
-  "dependencies": {
-    "dotenv": "^17.3.1",
-    "polyapi": "^0.25.28"
-  },
-  "devDependencies": {
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
-  }
+    "name": "poly-getting-started",
+    "description": "Getting-started tutorial and starter project for building on PolyAPI at Covetrus.",
+    "version": "1.0.0",
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "generate": "poly generate",
+        "deploy": "poly sync",
+        "setup:trigger": "ts-node src/triggers/motdTrigger.ts",
+        "models:generate": "poly model generate src/apiFunctions/jokeApi.openapi.yaml src/apiFunctions/jokeApi.model.json --context covetrus2.demo2 && poly model generate src/apiFunctions/adviceApi.openapi.yaml src/apiFunctions/adviceApi.model.json --context covetrus2.demo2",
+        "models:validate": "poly model validate src/apiFunctions/jokeApi.model.json && poly model validate src/apiFunctions/adviceApi.model.json",
+        "models:train": "poly model train src/apiFunctions/jokeApi.model.json && poly model train src/apiFunctions/adviceApi.model.json"
+    },
+    "dependencies": {
+        "dotenv": "^17.3.1",
+        "polyapi": "^0.25.28"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.2",
+        "typescript": "^5.5.4"
+    }
 }

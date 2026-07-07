@@ -69,7 +69,7 @@ PolyAPI implementations are built from a small set of constructs:
 | **API Function**      | Typed wrapper around a real HTTP endpoint, generated ("trained") from an OpenAPI spec | `getRandomJoke`, `getRandomAdvice` |
 | **Security function** | A server function that validates/authorizes a webhook request before it's let through | `validateMotdPayload`              |
 
-All resources in this example live under the `covetrus.demo` context on our
+All resources in this example live under the `covetrus2.demo2` context on our
 shared Covetrus PolyAPI tenant.
 
 ## 2. Prerequisites
@@ -227,7 +227,7 @@ npm run models:train
 ```
 
 After this, `getRandomJoke` and `getRandomAdvice` exist under the
-`covetrus.demo` context on the platform, ready to be pulled into your local
+`covetrus2.demo2` context on the platform, ready to be pulled into your local
 SDK the next time you run `npm run generate` (step 8).
 
 ## 8. Deploy to the PolyAPI platform
@@ -245,7 +245,7 @@ This runs `poly sync`, which scans the whole project for files exporting a
 After it deploys a file, it stamps a comment at the top like:
 
 ```typescript
-// Poly deployed @ 2026-07-03T10:00:00.000Z - covetrus.demo.motdServer - https://na2.polyapi.io/... - a1b2c3d4
+// Poly deployed @ 2026-07-03T10:00:00.000Z - covetrus2.demo2.motdServer - https://na2.polyapi.io/... - a1b2c3d4
 ```
 
 Leave that comment in place — it's how the tool tracks what's already
@@ -263,7 +263,7 @@ npm run generate
 This regenerates the typed bindings under `node_modules/.poly`, so
 `motdClient`, `motdServer`, and the two API Functions trained in step 7
 (`getRandomJoke`, `getRandomAdvice`) all become available as typed `poly.*`
-calls locally, e.g. `poly.covetrus.demo.motdServer({ name: "Ada", mood: "funny" })`.
+calls locally, e.g. `poly.covetrus2.demo2.motdServer({ name: "Ada", mood: "funny" })`.
 Re-run `npm run generate` any time the platform-side catalog changes —
 whenever you or a teammate add or change functions, webhooks, or other
 constructs.
@@ -389,7 +389,7 @@ Functions — the skeleton we'll build on. Next steps typically look like:
 
 ## Troubleshooting
 
--   **TypeScript can't find `poly.covetrus.demo.*`** — that namespace only
+-   **TypeScript can't find `poly.covetrus2.demo2.*`** — that namespace only
     exists after you've run `npm run deploy` and then `npm run generate` in
     this project. It's expected to be missing beforehand.
 -   **`poly generate` doesn't show my new function/webhook** — make sure
@@ -401,7 +401,7 @@ Functions — the skeleton we'll build on. Next steps typically look like:
     actual payload is under `.data` — e.g. `getRandomJoke()` resolves to
     `{ data: { setup, punchline, ... }, status, ... }`, not `{ setup,
 punchline, ... }` directly.
--   **TypeScript can't find `poly.covetrus.demo.getRandomJoke`/`getRandomAdvice`**
+-   **TypeScript can't find `poly.covetrus2.demo2.getRandomJoke`/`getRandomAdvice`**
     — these come from `npm run models:train` (step 7), not `npm run deploy`.
     Run `npm run models:generate` → `npm run models:validate` →
     `npm run models:train` in order, then `npm run generate` to pull them into

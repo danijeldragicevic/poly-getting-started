@@ -1,7 +1,7 @@
 import type { PolyWebhook } from "polyapi";
 
 export const polyConfig: PolyWebhook = {
-    context: "covetrus.demo",
+    context: "covetrus2.demo2",
     name: "motdWebhook",
     description: "Receives a name and mood and triggers the motdServer server function.",
     visibility: "TENANT",
