@@ -47,14 +47,12 @@ flowchart LR
 3. [Install Node.js and npm](#3-install-nodejs-and-npm)
 4. [Get the project and install dependencies](#4-get-the-project-and-install-dependencies)
 5. [Connect the CLI to our PolyAPI tenant](#5-connect-the-cli-to-our-polyapi-tenant)
-6. [Project structure](#6-project-structure)
-7. [Train API Functions](#7-train-api-functions)
-8. [Deploy to the PolyAPI platform](#8-deploy-to-the-polyapi-platform)
-9. [Wire the webhook](#9-wire-the-webhook)
-10. [Test it end-to-end](#10-test-it-end-to-end)
+6. [Train API Functions](#6-train-api-functions)
+7. [Deploy to the PolyAPI platform](#7-deploy-to-the-polyapi-platform)
+8. [Wire the webhook](#8-wire-the-webhook)
+9. [Test it end-to-end](#9-test-it-end-to-end)
 
 -   [What's next](#whats-next)
--   [Troubleshooting](#troubleshooting)
 
 ## 1. Key concepts
 
@@ -154,23 +152,7 @@ Choose **1) No (empty project)** — this repo already has its own webhook,
 server function, and client function under [`src/`](./src), so there's
 nothing for a template to scaffold.
 
-## 6. Project structure
-
-Each deployable `.ts` file exports a `polyConfig` object describing itself to
-the platform, plus the actual function implementation:
-
--   [`src/triggers/motdTrigger.ts`](./src/triggers/motdTrigger.ts) +
-    [`motdTrigger.config.json`](./src/triggers/motdTrigger.config.json) — script that wires the webhook to the server function
--   [`src/webhooks/motdWebhook.ts`](./src/webhooks/motdWebhook.ts) — public POST entrypoint, gated by `validateMotdPayload`
--   [`src/serverFunctions/motdServer.ts`](./src/serverFunctions/motdServer.ts) — calls `motdClient`, returns the combined greeting
--   [`src/serverFunctions/validateMotdPayload.ts`](./src/serverFunctions/validateMotdPayload.ts) — security function; rejects invalid `name`/`mood` before the trigger fires
--   [`src/clientFunctions/motdClient.ts`](./src/clientFunctions/motdClient.ts) — picks an API Function by mood, returns its content
--   [`src/apiFunctions/jokeApi.openapi.yaml`](./src/apiFunctions/jokeApi.openapi.yaml) — spec trained as the `getRandomJoke` API Function
--   [`src/apiFunctions/adviceApi.openapi.yaml`](./src/apiFunctions/adviceApi.openapi.yaml) — spec trained as the `getRandomAdvice` API Function
-
-API Functions don't have a hand-written `.ts` implementation — `npm run models:generate` (step 7) turns each spec into a `.model.json` file next to it, which is what actually gets trained.
-
-## 7. Train API Functions
+## 6. Train API Functions
 
 Not every integration needs hand-written code. If a real HTTP API already
 exists, PolyAPI can generate a typed wrapper function for it directly from an
@@ -184,7 +166,7 @@ no-auth demo API:
 -   [`src/apiFunctions/adviceApi.openapi.yaml`](./src/apiFunctions/adviceApi.openapi.yaml) — trains `getRandomAdvice`
 
 `motdClient` calls whichever one matches the `mood` field in the
-webhook payload (see [step 10](#10-test-it-end-to-end)). Neither demo API
+webhook payload (see [step 9](#9-test-it-end-to-end)). Neither demo API
 publishes its own OpenAPI spec, so these were hand-written to cover just the
 one endpoint each function needs — you don't need an API's own documentation
 to train against it, just an accurate spec for the calls you want to make.
@@ -210,9 +192,9 @@ npm run models:train
 
 After this, `getRandomJoke` and `getRandomAdvice` exist under the
 `foo.bar` context on the platform, ready to be pulled into your local
-SDK the next time you run `npm run generate` (step 8).
+SDK the next time you run `npm run generate` (step 7).
 
-## 8. Deploy to the PolyAPI platform
+## 7. Deploy to the PolyAPI platform
 
 Deploying pushes the local `.ts` deployables (client functions, server
 functions, webhooks) up to PolyAPI:
@@ -243,14 +225,14 @@ npm run generate
 ```
 
 This regenerates the typed bindings under `node_modules/.poly`, so
-`motdClient`, `motdServer`, and the two API Functions trained in step 7
+`motdClient`, `motdServer`, and the two API Functions trained in step 6
 (`getRandomJoke`, `getRandomAdvice`) all become available as typed `poly.*`
 calls locally, e.g. `poly.foo.bar.motdServer({ name: "Ada", mood: "funny" })`.
 Re-run `npm run generate` any time the platform-side catalog changes —
 whenever you or a teammate add or change functions, webhooks, or other
 constructs.
 
-## 9. Wire the webhook
+## 8. Wire the webhook
 
 `poly sync` doesn't reliably wire two things onto a webhook: the trigger that
 connects it to a server function, and the `securityFunctions` that validate
@@ -280,7 +262,7 @@ creating a duplicate — safe to re-run any time the config changes.
 ### Add payload validation (security function)
 
 [`src/serverFunctions/validateMotdPayload.ts`](./src/serverFunctions/validateMotdPayload.ts)
-is a normal server function — `npm run deploy` (step 8) deploys it like any
+is a normal server function — `npm run deploy` (step 7) deploys it like any
 other. The tricky part is wiring it into
 [`motdWebhook.ts`](./src/webhooks/motdWebhook.ts)'s
 `securityFunctions`, which references it by platform-assigned `id`:
@@ -299,7 +281,7 @@ once — grab it from the `// Poly deployed @ ...` comment `poly sync` stamps
 at the top of the file after deploying it, then paste it into the webhook's
 `securityFunctions` and run `npm run deploy` again.
 
-## 10. Test it end-to-end
+## 9. Test it end-to-end
 
 Once deployed, get this webhook's actual invoke URL from its details page in
 the PolyAPI dashboard (Canopy PolyUI) — it includes an environment-specific
@@ -370,36 +352,6 @@ Functions — the skeleton we'll build on. Next steps typically look like:
     data.
 -   Introduce global error handler to catch errors scoped by the tenat, environment, some specific function(s) etc.
 
-## Troubleshooting
+## License
 
--   **TypeScript can't find `poly.foo.bar.*`** — that namespace only
-    exists after you've run `npm run deploy` and then `npm run generate` in
-    this project. It's expected to be missing beforehand.
--   **`poly generate` doesn't show my new function/webhook** — make sure
-    `npm run deploy` finished without errors first; `generate` only reflects
-    what's actually deployed.
--   **A trained API Function's fields all come back `undefined`** — API
-    Functions return `ApiFunctionResponse<T>`, an envelope of
-    `{ status, data, headers, metrics }`, not the raw response body. The
-    actual payload is under `.data` — e.g. `getRandomJoke()` resolves to
-    `{ data: { setup, punchline, ... }, status, ... }`, not `{ setup,
-punchline, ... }` directly.
--   **TypeScript can't find `poly.foo.bar.getRandomJoke`/`getRandomAdvice`**
-    — these come from `npm run models:train` (step 7), not `npm run deploy`.
-    Run `npm run models:generate` → `npm run models:validate` →
-    `npm run models:train` in order, then `npm run generate` to pull them into
-    your local SDK.
--   **`npx poly setup` fails to connect** — double-check the base URL includes
-    the protocol (`https://...`) and that your API key hasn't expired.
--   **Trigger script can't find the webhook or server function** — confirm
-    `npm run deploy` deployed both first, and that `context`/`name` in the
-    `.ts` files exactly match
-    [`motdTrigger.config.json`](./src/triggers/motdTrigger.config.json).
--   **401 from the webhook** — check the `Authorization: Bearer <api-key>`
-    header, since `requirePolyApiKey: true` is set.
--   **403 from the webhook even with a valid payload** — `poly sync` may have
-    silently dropped your `securityFunctions` update (see the "Known CLI gap"
-    note in [step 9](#9-wire-the-webhook)). Confirm with
-    `GET /webhooks/<webhook-id>` (not the `GET /webhooks` list, which omits
-    `securityFunctions`), and PATCH it directly if it's out of sync with
-    [`motdWebhook.ts`](./src/webhooks/motdWebhook.ts).
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
