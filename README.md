@@ -91,17 +91,6 @@ Install Node.js with Homebrew:
 brew install node
 ```
 
-### Windows
-
-Open **PowerShell or Command Prompt** and run:
-
-```powershell
-winget install OpenJS.NodeJS.LTS
-```
-
-Accept the UAC prompt if one appears, then close that terminal and switch to
-Git Bash for the rest of this guide.
-
 ### Verify your installation
 
 ```bash
