@@ -14,12 +14,21 @@ export type MotdPayload = {
     mood: "funny" | "wise";
 };
 
+export type MotdResponse = {
+    statusCode: number;
+    message: string;
+};
+
 /**
  * Greets the caller by name, adding a message of the day chosen by motdClient based on mood.
  * @param {MotdPayload} eventPayload - The webhook payload containing the caller's name and mood.
- * @returns {Promise<string>} Combined greeting message.
+ * @returns {Promise<MotdResponse>} Combined greeting message.
  */
-export async function motdServer(eventPayload: MotdPayload): Promise<string> {
+export async function motdServer(eventPayload: MotdPayload): Promise<MotdResponse> {
     const content = await poly.foo.bar.motdClient(eventPayload.mood);
-    return `Hi ${eventPayload.name}! ${content}`;
+
+    return {
+        statusCode: 200,
+        message: `Hi ${eventPayload.name}! ${content}`,
+    };
 }

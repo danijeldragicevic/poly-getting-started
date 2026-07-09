@@ -133,7 +133,7 @@ cp .env.example .env
 Fill in `.env` with the tenant base URL and your personal API key:
 
 ```bash
-POLY_INSTANCE_URL=https://na2.polyapi.io
+POLY_INSTANCE_URL=https://eu1.polyapi.io
 POLY_API_KEY=your_poly_api_key_here
 ```
 
@@ -150,7 +150,7 @@ You'll be prompted for the same **base URL** and **API key** you put in
 `.env`. You can also pass them directly instead of the interactive prompts:
 
 ```bash
-npx poly setup https://na2.polyapi.io <your-api-key>
+npx poly setup https://eu1.polyapi.io <your-api-key>
 ```
 
 You'll also be asked whether you want to use a project template:
@@ -318,7 +318,7 @@ subdomain, so it won't match the tenant base URL you used for `poly setup`.
 For our tenant/environment it looks like this:
 
 ```bash
-curl -X POST 'https://94021a50.na2.polyapi.io/apis/foo-motd/motd' \
+curl -X POST 'https://94021a50.eu1.polyapi.io/apis/foo-motd/motd' \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer <your-poly-api-key>' \
   --data '{ "name": "Ada", "mood": "funny" }'
@@ -329,14 +329,14 @@ Function, since `mood` is `"funny"` (the joke itself is random, so the exact
 text will differ each call):
 
 ```json
-"Hi Ada! Why did the burglar hang his mugshot on the wall? ... To prove that he was framed!"
+{ "statusCode": 200, "message": "Hi Ada! What did the beaver say to the tree? ... It's been nice gnawing you." }
 ```
 
 Send `"mood": "wise"` instead to hit the trained `getRandomAdvice` API
 Function:
 
 ```json
-"Hi Ada! Mercy is the better part of justice."
+{ "statusCode": 200, "message": "Hi Ada! Mercy is the better part of justice." }
 ```
 
 That's the `motdServer` server function's actual return value — not the
@@ -356,7 +356,7 @@ Now send an invalid payload (missing `name`, or a `mood` other than
 trigger — and `motdServer` — ever run:
 
 ```bash
-curl -X POST 'https://94021a50.na2.polyapi.io/apis/foo-motd/motd' \
+curl -X POST 'https://94021a50.eu1.polyapi.io/apis/foo-motd/motd' \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer <your-poly-api-key>' \
   --data '{ "name": "Ada", "mood": "dummy" }'
@@ -379,6 +379,7 @@ Functions — the skeleton we'll build on. Next steps typically look like:
 -   Add `vari` entries for config/secrets the functions need (e.g. API base
     URLs, credentials), and `tabi` entries if you need to persist structured
     data.
+-   Introduce global error handler to catch errors scoped by the tenat, environment, some specific function(s) etc.
 
 ## Troubleshooting
 
