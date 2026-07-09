@@ -1,7 +1,7 @@
 import type { PolyServerFunction } from "polyapi";
 
 export const polyConfig: PolyServerFunction = {
-    context: "covetrus2.demo2",
+    context: "foo.bar",
     name: "validateMotdPayload",
     description: "Validates the motd webhook payload for required fields and correct values.",
     visibility: "TENANT",

@@ -1,7 +1,7 @@
 import poly, { PolyClientFunction } from "polyapi";
 
 export const polyConfig: PolyClientFunction = {
-    context: "covetrus2.demo2",
+    context: "foo.bar",
     name: "motdClient",
     description: "Picks a trained API Function based on mood and returns its content.",
     visibility: "TENANT",
@@ -16,10 +16,10 @@ export type Mood = "funny" | "wise";
  */
 export async function motdClient(mood: Mood): Promise<string> {
     if (mood === "funny") {
-        const joke = await poly.covetrus2.demo2.getRandomJoke();
+        const joke = await poly.foo.bar.getRandomJoke();
         return `${joke.data.setup} ... ${joke.data.punchline}`;
     }
 
-    const advice = await poly.covetrus2.demo2.getRandomAdvice();
+    const advice = await poly.foo.bar.getRandomAdvice();
     return advice.data.slip.advice;
 }

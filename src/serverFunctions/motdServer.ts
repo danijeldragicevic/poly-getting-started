@@ -1,7 +1,7 @@
 import poly, { PolyServerFunction } from "polyapi";
 
 export const polyConfig: PolyServerFunction = {
-    context: "covetrus2.demo2",
+    context: "foo.bar",
     name: "motdServer",
     description: "Greets the caller by name, adding a message of the day chosen by motdClient based on mood.",
     visibility: "TENANT",
@@ -20,6 +20,6 @@ export type MotdPayload = {
  * @returns {Promise<string>} Combined greeting message.
  */
 export async function motdServer(eventPayload: MotdPayload): Promise<string> {
-    const content = await poly.covetrus2.demo2.motdClient(eventPayload.mood);
+    const content = await poly.foo.bar.motdClient(eventPayload.mood);
     return `Hi ${eventPayload.name}! ${content}`;
 }

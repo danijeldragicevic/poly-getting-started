@@ -69,12 +69,11 @@ PolyAPI implementations are built from a small set of constructs:
 | **API Function**      | Typed wrapper around a real HTTP endpoint, generated ("trained") from an OpenAPI spec | `getRandomJoke`, `getRandomAdvice` |
 | **Security function** | A server function that validates/authorizes a webhook request before it's let through | `validateMotdPayload`              |
 
-All resources in this example live under the `covetrus2.demo2` context on our
-shared Covetrus PolyAPI tenant.
+All resources in this example live under the `foo.bar` context.
 
 ## 2. Prerequisites
 
--   Access to our Covetrus PolyAPI tenant: **base URL** (e.g. `https://na2.polyapi.io`)
+-   Access to our Foo PolyAPI tenant: **base URL** (e.g. `https://eu1.polyapi.io`)
     and an **API key**. Ask your PolyAPI admin if you don't have these yet.
 -   A code editor (VS Code recommended).
 -   Git (to clone/manage the project repository).
@@ -182,12 +181,6 @@ the platform, plus the actual function implementation:
 
 API Functions don't have a hand-written `.ts` implementation — `npm run models:generate` (step 7) turns each spec into a `.model.json` file next to it, which is what actually gets trained.
 
-[`src/webhooks/motdWebhook.ts`](./src/webhooks/motdWebhook.ts) already
-uses `slug: "covetrus-motd"`, the shared slug for this tutorial's webhooks on
-our tenant. If you deploy your own copy of this webhook for experimentation,
-change `name` (and `slug` if you want a separate URL) so it doesn't collide
-with the shared one.
-
 ## 7. Train API Functions
 
 Not every integration needs hand-written code. If a real HTTP API already
@@ -227,7 +220,7 @@ npm run models:train
 ```
 
 After this, `getRandomJoke` and `getRandomAdvice` exist under the
-`covetrus2.demo2` context on the platform, ready to be pulled into your local
+`foo.bar` context on the platform, ready to be pulled into your local
 SDK the next time you run `npm run generate` (step 8).
 
 ## 8. Deploy to the PolyAPI platform
@@ -245,7 +238,7 @@ This runs `poly sync`, which scans the whole project for files exporting a
 After it deploys a file, it stamps a comment at the top like:
 
 ```typescript
-// Poly deployed @ 2026-07-03T10:00:00.000Z - covetrus2.demo2.motdServer - https://na2.polyapi.io/... - a1b2c3d4
+// Poly deployed @ 2026-07-03T10:00:00.000Z - foo.bar.motdServer - https://eu1.polyapi.io/... - a1b2c3d4
 ```
 
 Leave that comment in place — it's how the tool tracks what's already
@@ -263,7 +256,7 @@ npm run generate
 This regenerates the typed bindings under `node_modules/.poly`, so
 `motdClient`, `motdServer`, and the two API Functions trained in step 7
 (`getRandomJoke`, `getRandomAdvice`) all become available as typed `poly.*`
-calls locally, e.g. `poly.covetrus2.demo2.motdServer({ name: "Ada", mood: "funny" })`.
+calls locally, e.g. `poly.foo.bar.motdServer({ name: "Ada", mood: "funny" })`.
 Re-run `npm run generate` any time the platform-side catalog changes —
 whenever you or a teammate add or change functions, webhooks, or other
 constructs.
@@ -325,7 +318,7 @@ subdomain, so it won't match the tenant base URL you used for `poly setup`.
 For our tenant/environment it looks like this:
 
 ```bash
-curl -X POST 'https://94021a50.na2.polyapi.io/apis/covetrus-motd/motd' \
+curl -X POST 'https://94021a50.na2.polyapi.io/apis/foo-motd/motd' \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer <your-poly-api-key>' \
   --data '{ "name": "Ada", "mood": "funny" }'
@@ -363,7 +356,7 @@ Now send an invalid payload (missing `name`, or a `mood` other than
 trigger — and `motdServer` — ever run:
 
 ```bash
-curl -X POST 'https://94021a50.na2.polyapi.io/apis/covetrus-motd/motd' \
+curl -X POST 'https://94021a50.na2.polyapi.io/apis/foo-motd/motd' \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer <your-poly-api-key>' \
   --data '{ "name": "Ada", "mood": "dummy" }'
@@ -379,7 +372,7 @@ You now have a deployed webhook → trigger → server function → client funct
 chain, validated by a security function and choosing between two trained API
 Functions — the skeleton we'll build on. Next steps typically look like:
 
--   Train API Functions against a real Covetrus/3rd-party API instead of demo
+-   Train API Functions against a real 3rd-party API instead of demo
     ones, using its actual OpenAPI spec where one exists.
 -   Replace the webhook's payload schema with the real event contract, and
     extend `validateMotdPayload` to match.
@@ -389,7 +382,7 @@ Functions — the skeleton we'll build on. Next steps typically look like:
 
 ## Troubleshooting
 
--   **TypeScript can't find `poly.covetrus2.demo2.*`** — that namespace only
+-   **TypeScript can't find `poly.foo.bar.*`** — that namespace only
     exists after you've run `npm run deploy` and then `npm run generate` in
     this project. It's expected to be missing beforehand.
 -   **`poly generate` doesn't show my new function/webhook** — make sure
@@ -401,7 +394,7 @@ Functions — the skeleton we'll build on. Next steps typically look like:
     actual payload is under `.data` — e.g. `getRandomJoke()` resolves to
     `{ data: { setup, punchline, ... }, status, ... }`, not `{ setup,
 punchline, ... }` directly.
--   **TypeScript can't find `poly.covetrus2.demo2.getRandomJoke`/`getRandomAdvice`**
+-   **TypeScript can't find `poly.foo.bar.getRandomJoke`/`getRandomAdvice`**
     — these come from `npm run models:train` (step 7), not `npm run deploy`.
     Run `npm run models:generate` → `npm run models:validate` →
     `npm run models:train` in order, then `npm run generate` to pull them into
